@@ -54,6 +54,23 @@ set number                    " line numbers
 set relativenumber            " relative line numbers
 set mouse=a                   " mouse support
 set clipboard=unnamedplus     " system clipboard
+
+" Use OSC 52 for clipboard over SSH (sends yank to local terminal clipboard)
+lua << EOF
+if os.getenv("SSH_CONNECTION") then
+  vim.g.clipboard = {
+    name = "OSC 52",
+    copy = {
+      ["+"] = require("vim.ui.clipboard.osc52").copy("+"),
+      ["*"] = require("vim.ui.clipboard.osc52").copy("*"),
+    },
+    paste = {
+      ["+"] = require("vim.ui.clipboard.osc52").paste("+"),
+      ["*"] = require("vim.ui.clipboard.osc52").paste("*"),
+    },
+  }
+end
+EOF
 set termguicolors             " true color support
 set signcolumn=yes            " always show sign column
 set updatetime=300            " faster completion
@@ -81,7 +98,8 @@ set completeopt=menuone,noinsert,noselect
 " ---------------------------------------------------------------------------
 " Color Scheme
 " ---------------------------------------------------------------------------
-silent! colorscheme catppuccin-mocha
+set background=light
+silent! colorscheme catppuccin-latte
 
 " ---------------------------------------------------------------------------
 " Key Mappings
@@ -268,12 +286,15 @@ nnoremap <leader>tf :ToggleTerm direction=float<CR>
 " Remove trailing whitespace on save
 autocmd BufWritePre * :%s/\s\+$//e
 
+" Auto-save on leaving insert mode or cursor idle
+autocmd InsertLeave,CursorHold * if &modified && filereadable(expand('%')) | silent! write | endif
+
 " Return to last edit position when opening files
 autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 
 " Auto-reload files changed outside of Vim
 set autoread
-autocmd FocusGained,BufEnter * checktime
+autocmd FocusGained,BufEnter,CursorHold,CursorMoved * checktime
 
 " ---------------------------------------------------------------------------
 " Lua Plugin Configurations
