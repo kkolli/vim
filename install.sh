@@ -13,6 +13,33 @@ echo " Neovim Dev Environment Setup"
 echo "========================================="
 
 # ---------------------------------------------------------------------------
+# Step 0: Install fd and ripgrep (fast file finder & search for fzf)
+# ---------------------------------------------------------------------------
+echo ""
+echo "[0/7] Installing fd and ripgrep for fast file indexing..."
+if command -v apt-get &>/dev/null; then
+    if ! command -v fdfind &>/dev/null && ! command -v fd &>/dev/null; then
+        sudo apt-get update -qq && sudo apt-get install -y -qq fd-find ripgrep 2>/dev/null || true
+        # On Debian/Ubuntu the binary is 'fdfind'; create symlink to 'fd'
+        if command -v fdfind &>/dev/null && ! command -v fd &>/dev/null; then
+            ln -sf "$(which fdfind)" ~/.local/bin/fd
+            echo "  Symlinked fdfind -> ~/.local/bin/fd"
+        fi
+    else
+        echo "  fd already installed — skipping"
+    fi
+    if ! command -v rg &>/dev/null; then
+        sudo apt-get install -y -qq ripgrep 2>/dev/null || true
+    else
+        echo "  ripgrep already installed — skipping"
+    fi
+else
+    echo "  WARNING: apt-get not found. Please install 'fd' and 'ripgrep' manually."
+    echo "    See: https://github.com/sharkdp/fd#installation"
+    echo "    See: https://github.com/BurntSushi/ripgrep#installation"
+fi
+
+# ---------------------------------------------------------------------------
 # Step 1: Ensure Node.js >= 16 is available (required by CoC.nvim)
 # ---------------------------------------------------------------------------
 echo ""

@@ -233,6 +233,28 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 " ---------------------------------------------------------------------------
 " FZF Configuration (Fuzzy Finder like Ctrl+P)
 " ---------------------------------------------------------------------------
+
+" Source files first (respects .gitignore), then bazel output dirs.
+" This ensures Ctrl+P shows source files at the top, with bazel-bin/
+" bazel-out/bazel-testlogs files available further down the list.
+if executable('fd')
+  let $FZF_DEFAULT_COMMAND =
+    \ 'fd --type f --hidden --follow --exclude .git;'
+    \ . 'bdirs=""; for d in bazel-bin bazel-out bazel-testlogs bazel-genfiles; do'
+    \ . ' [ -d "$d" ] && bdirs="$bdirs $d"; done;'
+    \ . ' [ -n "$bdirs" ] && fd --type f --hidden --follow --no-ignore --exclude .git . $bdirs'
+elseif executable('rg')
+  let $FZF_DEFAULT_COMMAND =
+    \ 'rg --files --hidden --follow --glob "!.git";'
+    \ . 'for d in bazel-bin bazel-out bazel-testlogs bazel-genfiles; do'
+    \ . ' [ -d "$d" ] && rg --files --hidden --follow --no-ignore --glob "!.git" "$d"; done'
+else
+  let $FZF_DEFAULT_COMMAND =
+    \ 'find . -type f -not -path "*/.git/*" -not -path "*/bazel-*/*";'
+    \ . 'for d in bazel-bin bazel-out bazel-testlogs bazel-genfiles; do'
+    \ . ' [ -d "$d" ] && find "$d" -type f; done 2>/dev/null'
+endif
+
 nnoremap <C-p> :Files<CR>
 nnoremap <leader>ff :Files<CR>
 nnoremap <leader>fg :Rg<CR>
