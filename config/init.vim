@@ -45,6 +45,12 @@ Plug 'folke/tokyonight.nvim'
 Plug 'akinsho/toggleterm.nvim', {'tag': '*'}
 Plug 'github/copilot.vim'                 " AI completion (optional)
 
+" --- GitHub PR Review ---
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.8' }
+Plug 'pwntester/octo.nvim'
+Plug 'nvim-tree/nvim-web-devicons'
+
 call plug#end()
 
 " ---------------------------------------------------------------------------
@@ -342,7 +348,23 @@ set autoread
 autocmd FocusGained,BufEnter,CursorHold,CursorMoved * checktime
 
 " ---------------------------------------------------------------------------
+" GitHub PR Review (Octo)
+" ---------------------------------------------------------------------------
+nnoremap <leader>pl :Octo pr list<CR>
+nnoremap <leader>pp :Octo pr search author=kkolli state=open<CR>
+nnoremap <leader>pr :Octo pr search reviewer=kkolli state=open<CR>
+nnoremap <leader>pi :Octo pr search involves=kkolli state=open<CR>
+nnoremap <leader>pd :Octo pr diff<CR>
+nnoremap <leader>pc :Octo pr checks<CR>
+nnoremap <leader>pm :Octo pr merge<CR>
+nnoremap <leader>rs :Octo review start<CR>
+nnoremap <leader>rc :Octo review comments<CR>
+nnoremap <leader>rb :Octo review submit<CR>
+
+" ---------------------------------------------------------------------------
 " Lua Plugin Configurations
 " ---------------------------------------------------------------------------
 lua require('toggleterm-config')
 lua require('treesitter-config')
+lua require('telescope-config')
+lua require('octo-config')

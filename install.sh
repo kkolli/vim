@@ -119,12 +119,16 @@ cp "$SCRIPT_DIR/config/init.vim"               "$NVIM_CONFIG_DIR/init.vim"
 cp "$SCRIPT_DIR/config/coc-settings.json"       "$NVIM_CONFIG_DIR/coc-settings.json"
 cp "$SCRIPT_DIR/config/lua/toggleterm-config.lua" "$NVIM_CONFIG_DIR/lua/toggleterm-config.lua"
 cp "$SCRIPT_DIR/config/lua/treesitter-config.lua" "$NVIM_CONFIG_DIR/lua/treesitter-config.lua"
+cp "$SCRIPT_DIR/config/lua/telescope-config.lua"  "$NVIM_CONFIG_DIR/lua/telescope-config.lua"
+cp "$SCRIPT_DIR/config/lua/octo-config.lua"       "$NVIM_CONFIG_DIR/lua/octo-config.lua"
 cp "$SCRIPT_DIR/config/cheatsheet.md"           "$NVIM_CONFIG_DIR/cheatsheet.md"
 
 echo "  Wrote ~/.config/nvim/init.vim"
 echo "  Wrote ~/.config/nvim/coc-settings.json"
 echo "  Wrote ~/.config/nvim/lua/toggleterm-config.lua"
 echo "  Wrote ~/.config/nvim/lua/treesitter-config.lua"
+echo "  Wrote ~/.config/nvim/lua/telescope-config.lua"
+echo "  Wrote ~/.config/nvim/lua/octo-config.lua"
 echo "  Wrote ~/.config/nvim/cheatsheet.md"
 
 # ---------------------------------------------------------------------------
