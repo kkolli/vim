@@ -157,6 +157,21 @@ let NERDTreeWinSize = 25
 autocmd FileType nerdtree setlocal winfixwidth
 set equalalways
 
+function! BalanceWindowsPreserveTree()
+  let cur = winnr()
+  for w in range(1, winnr('$'))
+    if getbufvar(winbufnr(w), '&filetype') ==# 'nerdtree'
+      execute w . 'wincmd w'
+      execute 'vertical resize ' . g:NERDTreeWinSize
+      break
+    endif
+  endfor
+  execute cur . 'wincmd w'
+  wincmd =
+endfunction
+
+autocmd WinNew * call timer_start(10, {-> execute('call BalanceWindowsPreserveTree()')})
+
 " Auto-close NERDTree if it's the last window
 autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
 
