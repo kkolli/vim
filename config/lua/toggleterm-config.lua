@@ -36,6 +36,7 @@ toggleterm.setup({
 local Terminal = require("toggleterm.terminal").Terminal
 
 local agent_term = Terminal:new({
+  count = 99,
   cmd = os.getenv("SHELL") or "bash",
   direction = "float",
   float_opts = {

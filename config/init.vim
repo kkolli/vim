@@ -158,15 +158,23 @@ autocmd FileType nerdtree setlocal winfixwidth
 set equalalways
 
 function! BalanceWindowsPreserveTree()
+  if nvim_win_get_config(0).relative != ''
+    return
+  endif
   let cur = winnr()
   for w in range(1, winnr('$'))
+    if nvim_win_get_config(win_getid(w)).relative != ''
+      continue
+    endif
     if getbufvar(winbufnr(w), '&filetype') ==# 'nerdtree'
       execute w . 'wincmd w'
       execute 'vertical resize ' . g:NERDTreeWinSize
       break
     endif
   endfor
-  execute cur . 'wincmd w'
+  if cur <= winnr('$')
+    execute cur . 'wincmd w'
+  endif
   wincmd =
 endfunction
 
@@ -300,8 +308,8 @@ let g:gitgutter_sign_modified_removed = '~'
 " Terminal / ToggleTerm (for Agent CLI integration)
 " ---------------------------------------------------------------------------
 " Toggle terminal with Ctrl+` (like VSCode)
-nnoremap <silent> <C-\> :ToggleTerm direction=horizontal size=15<CR>
-tnoremap <silent> <C-\> <C-\><C-n>:ToggleTerm<CR>
+nnoremap <silent> <C-\> :1ToggleTerm direction=horizontal size=15<CR>
+tnoremap <silent> <C-\> <C-\><C-n>:1ToggleTerm<CR>
 
 " Easy escape from terminal mode
 tnoremap <Esc> <C-\><C-n>
@@ -311,11 +319,11 @@ tnoremap <C-k> <C-\><C-n><C-w>k
 tnoremap <C-l> <C-\><C-n><C-w>l
 
 " Named terminals for quick access
-command! -nargs=0 AgentTerm :ToggleTerm direction=float size=20
+command! -nargs=0 AgentTerm :lua _AGENT_TOGGLE()
 nnoremap <leader>ta :AgentTerm<CR>
-nnoremap <leader>tt :ToggleTerm direction=horizontal size=15<CR>
-nnoremap <leader>tv :ToggleTerm direction=vertical size=80<CR>
-nnoremap <leader>tf :ToggleTerm direction=float<CR>
+nnoremap <leader>tt :1ToggleTerm direction=horizontal size=15<CR>
+nnoremap <leader>tv :1ToggleTerm direction=vertical size=80<CR>
+nnoremap <leader>tf :1ToggleTerm direction=float<CR>
 
 " ---------------------------------------------------------------------------
 " Auto Commands
