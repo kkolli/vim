@@ -45,6 +45,9 @@ Plug 'folke/tokyonight.nvim'
 Plug 'akinsho/toggleterm.nvim', {'tag': '*'}
 Plug 'github/copilot.vim'                 " AI completion (optional)
 
+" --- Claude Code Integration ---
+Plug 'coder/claudecode.nvim'
+
 " --- GitHub PR Review ---
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.8' }
@@ -348,6 +351,13 @@ set autoread
 autocmd FocusGained,BufEnter,CursorHold,CursorMoved * checktime
 
 " ---------------------------------------------------------------------------
+" Claude Code
+" ---------------------------------------------------------------------------
+" <leader>cc  — Toggle Claude Code terminal
+" <leader>cs  — (visual) Send selection to Claude as context
+" <leader>ca  — Add current file to Claude context
+
+" ---------------------------------------------------------------------------
 " GitHub PR Review (Octo)
 " ---------------------------------------------------------------------------
 nnoremap <leader>pl :Octo pr list<CR>
@@ -368,3 +378,4 @@ lua require('toggleterm-config')
 lua require('treesitter-config')
 lua require('telescope-config')
 lua require('octo-config')
+lua require('claudecode-config')
